@@ -11,12 +11,10 @@ class App extends Component {
     super(props);
 
     this.state = {
+      todos: [],
       title: '',
       priority: '',
-    };
-
-    this.state = {
-      todos: []
+      toggleDisplay: false
     };
     this.markComplete = this.markComplete.bind(this);
     this.delTodo = this.delTodo.bind(this);
@@ -63,7 +61,7 @@ class App extends Component {
       id: uuid.v4(),
       title,
       completed: false,
-      priority: ''
+      priority: this.state.priority
     };
     this.setState({ todos: [...this.state.todos, newTodo] });
   }
@@ -82,10 +80,11 @@ class App extends Component {
   editDisplay() {
     this.editTodo(
       this.state.title,
-      this.state.priority
+      this.state.priority,
+      this.state.id
   );
     this.setState({
-      toggleDisplay: this.state.toggleDisplay
+      toggleDisplay: !this.state.toggleDisplay
     });
   }
 
@@ -110,7 +109,12 @@ class App extends Component {
                   </div>
                   <div>
                     <label htmlFor='inputState'>How much of a priority is this?</label>
-                    <select name='priority' id='inputState' className='form-control' onChange={ this.onChange } value={ this.state.priority }>
+                    <select
+                      name='priority'
+                      id='inputState'
+                      className='form-control'
+                      onChange={ this.onChange }
+                      value={ this.state.priority }>
                       <option selected >Select a Priority</option>
                       <option value='1'>Low</option>
                       <option value='2'>Medium</option>
@@ -130,7 +134,6 @@ class App extends Component {
             <div className='col-md-8 results-wrapper'>
               <div className='panel panel-default'>
                 <div className='panel-heading'>View Todos</div>
-                <ul className='list-group'>
                 <Todos
                   todos={ this.state.todos } markComplete={ this.markComplete }
                   delTodo={ this.delTodo } editTodo={ this.editTodo }
@@ -140,7 +143,6 @@ class App extends Component {
                 <div className='panel-body'>
                   <p></p>
                 </div>
-                </ul>
               </div>
             </div>
           </div>
