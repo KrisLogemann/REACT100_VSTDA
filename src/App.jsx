@@ -18,13 +18,12 @@ class App extends Component {
     };
     this.markComplete = this.markComplete.bind(this);
     this.delTodo = this.delTodo.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.editTodo = this.editTodo.bind(this);
-    this.editDisplay = this.editDisplay.bind(this);
+    this.onChange = this.onChange.bind(this);
+    // this.editDisplay = this.editDisplay.bind(this);
   }
-
   onChange(e) {
     if (e.target.name === 'title') {
       this.setState({ title: e.target.value });
@@ -34,7 +33,6 @@ class App extends Component {
     // this.setState({ title: e.target.value });
     // this.setState({ priority: e.target.value });
   }
-
   // Submit Todo
   onSubmit(e) {
     e.preventDefault();
@@ -43,19 +41,23 @@ class App extends Component {
   }
   // Delete Todo
   delTodo(id) {
-    this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] });
+    this.setState({
+      todos: [...this.state.todos.filter(todo => todo.id !== id)]
+    });
   }
 
   // Toggle complete
   markComplete(id) {
-    this.setState({ todos: this.state.todos.map((todo) => {
-      if (todo.id === id) {
-        todo.completed = !todo.completed;
-      }
-      return todo;
-    }) });
+    this.setState({
+      todos: this.state.todos.map((todo) => {
+        if (todo.id === id) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      })
+    });
   }
-// Add New Todo
+  // Add New Todo
   addTodo(title) {
     const newTodo = {
       id: uuid.v4(),
@@ -65,27 +67,21 @@ class App extends Component {
     };
     this.setState({ todos: [...this.state.todos, newTodo] });
   }
-// Edit Todo
+
+
+  // Edit Todo
   editTodo(title, priority, id) {
-    const copyTodos = this.state.todos;
+    let copyTodos = this.state.todos;
     for (let i = 0; i < copyTodos.length; i++) {
+      console.log(id, ' ', copyTodos[i].id )
       if (copyTodos[i].id == id) {
         copyTodos[i].title = title;
         copyTodos[i].priority = priority;
+        console.log('found item')
       }
     }
-    this.setState({ todos: copyTodos });
-  }
-// Edit Display
-  editDisplay() {
-    this.editTodo(
-      this.state.title,
-      this.state.priority,
-      this.state.id
-  );
-    this.setState({
-      toggleDisplay: !this.state.toggleDisplay
-    });
+    this.setState({ todos: copyTodos })
+    console.log('editing todos', copyTodos);
   }
 
   render() {
@@ -103,19 +99,31 @@ class App extends Component {
                 <div className='panel-body'>
                   <div className='form-group'>
                     <div className='form-group'>
-                      <label htmlFor='exampleFormControlTextarea1'>I want to...</label>
-                      <textarea name='title' className='form-control rounded-0' id='exampleFormControlTextarea1' rows='5' value={ this.state.title } onChange={ this.onChange }></textarea>
+                      <label htmlFor='exampleFormControlTextarea1'>
+                        I want to...
+                      </label>
+                      <textarea
+                        name='title'
+                        className='form-control rounded-0 create-todo-text'
+                        id='exampleFormControlTextarea1'
+                        rows='5'
+                        value={ this.state.title }
+                        onChange={ this.onChange }
+                      />
                     </div>
                   </div>
                   <div>
-                    <label htmlFor='inputState'>How much of a priority is this?</label>
+                    <label htmlFor='inputState'>
+                      How much of a priority is this?
+                    </label>
                     <select
                       name='priority'
                       id='inputState'
-                      className='form-control'
+                      className='form-control create-todo-priority'
                       onChange={ this.onChange }
-                      value={ this.state.priority }>
-                      <option selected >Select a Priority</option>
+                      value={ this.state.priority }
+                    >
+                      <option selected>Select a Priority</option>
                       <option value='1'>Low</option>
                       <option value='2'>Medium</option>
                       <option value='3'>High</option>
@@ -126,8 +134,10 @@ class App extends Component {
                   <button
                     onClick={ this.onSubmit }
                     name='button'
-                    className='btn btn-primary btn-lg btn-block'
-                  >Add</button>
+                    className='btn btn-primary btn-lg btn-block create-todo'
+                  >
+                    Add
+                  </button>
                 </div>
               </div>
             </div>
@@ -135,13 +145,16 @@ class App extends Component {
               <div className='panel panel-default'>
                 <div className='panel-heading'>View Todos</div>
                 <Todos
-                  todos={ this.state.todos } markComplete={ this.markComplete }
-                  delTodo={ this.delTodo } editTodo={ this.editTodo }
-                  editDisplay={ this.editDisplay } toggleDisplay={ this.toggleDisplay }
+                  todos={ this.state.todos }
+                  markComplete={ this.markComplete }
+                  delTodo={ this.delTodo }
+                  editTodo={ this.editTodo }
+                  editDisplay={ this.editDisplay }
+                  toggleDisplay={ this.toggleDisplay }
                   priority={ this.state.priority }
                 />
                 <div className='panel-body'>
-                  <p></p>
+                  <p />
                 </div>
               </div>
             </div>
@@ -151,6 +164,5 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;
